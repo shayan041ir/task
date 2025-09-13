@@ -61,22 +61,73 @@ class Users extends CI_Controller {
     }
 
 public function create() {
+    // اعتبارسنجی
+    $this->form_validation->set_rules('name', 'نام', 'required|min_length[3]');
+    $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email|is_unique[users.email]');
+    $this->form_validation->set_rules('password', 'رمز عبور', 'required|min_length[6]');
+    $this->form_validation->set_rules('role', 'نقش', 'required|in_list[user,admin]');
+
+    if ($this->form_validation->run() === FALSE) {
+        echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+        return;
+    }
+
     $data = [
         'name' => $this->input->post('name', true),
         'email' => $this->input->post('email', true),
-        'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
+        'password' => $this->input->post('password'),
         'role' => $this->input->post('role') ?: 'user'
     ];
-    $this->userservice->createUser($data);
-    echo json_encode(['status'=>'success']);
+    
+    try {
+        $result = $this->userservice->createUser($data);
+        if($result) {
+            echo json_encode(['status' => 'success', 'message' => 'کاربر با موفقیت ایجاد شد']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'خطا در ایجاد کاربر']);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    }
 }
 
 public function edit($id) {
     $user = $this->User_model->get_user($id);
-    if (!$user) show_404();
+    if (!$user) {
+        if($this->input->is_ajax_request()) {
+            echo json_encode(['status' => 'error', 'message' => 'کاربر یافت نشد']);
+            return;
+        }
+        show_404();
+    }
 
-    if($this->input->is_ajax_request() && $this->input->method() === 'get'){
-        echo json_encode($user);
+    // اگر درخواست AJAX باشد و POST نباشد، اطلاعات کاربر را برگردان
+    if($this->input->is_ajax_request() && !$this->input->post()){
+        log_message('debug', 'AJAX GET request received for user edit: ' . $id);
+        echo json_encode(['user' => $user, 'mode' => 'edit']);
+        return;
+    }
+
+    // اعتبارسنجی
+    $this->form_validation->set_rules('name', 'نام', 'required|min_length[3]');
+    $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email|callback_check_email_unique[' . $id . ']');
+    $this->form_validation->set_rules('role', 'نقش', 'required|in_list[user,admin]');
+    
+    if ($this->input->post('password')) {
+        $this->form_validation->set_rules('password', 'رمز عبور', 'min_length[6]');
+    }
+
+
+    
+    if ($this->form_validation->run() === FALSE) {
+        if($this->input->is_ajax_request()) {
+            echo json_encode(['status' => 'error', 'message' => validation_errors()]);
+            return;
+        }
+        // برای درخواست غیر AJAX
+        $this->load->view('admin/header');
+        $this->load->view('admin/users_list', ['mode' => 'edit', 'user' => $user]);
+        $this->load->view('admin/footer');
         return;
     }
 
@@ -85,22 +136,77 @@ public function edit($id) {
         'email' => $this->input->post('email', true),
         'role' => $this->input->post('role') ?: 'user'
     ];
-    if ($this->input->post('password'))  password_hash($update['password'] = $this->input->post('password'), PASSWORD_BCRYPT);
-    $this->userservice->updateUser($id, $update);
-
+    
+    if ($this->input->post('password')) {
+        $update['password'] = $this->input->post('password');
+    }
+    
+    $result = $this->userservice->updateUser($id, $update);
+    
     if($this->input->is_ajax_request()) {
-        echo json_encode(['status'=>'success']);
+        if($result) {
+            echo json_encode(['status' => 'success', 'message' => 'کاربر با موفقیت به‌روزرسانی شد']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'خطا در به‌روزرسانی کاربر']);
+        }
     } else {
+        if($result) {
+            $this->session->set_flashdata('success', 'کاربر با موفقیت به‌روزرسانی شد');
+        } else {
+            $this->session->set_flashdata('error', 'خطا در به‌روزرسانی کاربر');
+        }
         redirect('admin/users');
     }
 }
 
+
+    // متود سفارشی برای بررسی یکتایی ایمیل در ویرایش
+    public function check_email_unique($email, $exclude_id) {
+        $existing_user = $this->User_model->get_by_email($email);
+        
+        // اگر کاربری با این ایمیل وجود نداشته باشد، OK است
+        if (!$existing_user) {
+            return true;
+        }
+        
+        // اگر کاربر موجود همان کاربری باشد که در حال ویرایش است، OK است
+        if ($existing_user->id == $exclude_id) {
+            return true;
+        }
+        
+        // در غیر این صورت، ایمیل تکراری است
+        $this->form_validation->set_message('check_email_unique', 'این ایمیل قبلاً استفاده شده است.');
+        return false;
+    }
+
+
+
     public function delete($id) {
         if ($this->session->userdata('user_id') == $id) {
+            if($this->input->is_ajax_request()) {
+                echo json_encode(['status' => 'error', 'message' => 'نمی‌توانید خود را حذف کنید.']);
+                return;
+            }
             $this->session->set_flashdata('error', 'نمی‌توانید خود را حذف کنید.');
             redirect('admin/users');
         }
-        $this->userservice->deleteUser($id);
-        redirect('admin/users');
+        
+        $result = $this->userservice->deleteUser($id);
+        
+        if($this->input->is_ajax_request()) {
+            if($result) {
+                echo json_encode(['status' => 'success', 'message' => 'کاربر با موفقیت حذف شد']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'خطا در حذف کاربر']);
+            }
+        } else {
+            if($result) {
+                $this->session->set_flashdata('success', 'کاربر با موفقیت حذف شد');
+            } else {
+                $this->session->set_flashdata('error', 'خطا در حذف کاربر');
+            }
+            redirect('admin/users');
+        }
     }
+
 }

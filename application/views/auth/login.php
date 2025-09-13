@@ -1,6 +1,5 @@
 <div class="card p-4">
   <h3>ورود</h3>
-  <?php if ($this->session->flashdata('error')): ?><div class="alert alert-danger"><?= $this->session->flashdata('error'); ?></div><?php endif; ?>
   <?= validation_errors('<div class="alert alert-danger">','</div>'); ?>
   <?= form_open('login'); ?>
     <div class="mb-2"><input class="form-control" type="email" name="email" placeholder="ایمیل" value="<?= set_value('email'); ?>"></div>
@@ -15,3 +14,4 @@
 
 <!-- <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" 
        value="<?= $this->security->get_csrf_hash(); ?>" /> -->
+

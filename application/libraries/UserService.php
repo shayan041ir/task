@@ -9,9 +9,11 @@ class UserService {
     }
 
     public function createUser(array $data) {
-        if (isset($data['password'])) {
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        if (!isset($data['password']) || empty($data['password'])) {
+            throw new Exception('رمز عبور نمی‌تواند خالی باشد.');
         }
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        
         return $this->CI->User_model->insert_user($data);
     }
 
