@@ -536,10 +536,34 @@
             </div>
             <ul class="side-menu ">
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="landing-page.html" target="_blank"><i
+                    <a class="side-menu__item" data-bs-toggle="slide" href="<?= site_url('admin/users') ?>" target="_blank"><i
                             class="side-menu__icon  bx bx-landscape"></i><span
                             class="side-menu__label">داشبورد</span></a>
                 </li>
+                <?php 
+                    // بررسی نقش کاربر از سشن یا متغیر user/admin
+                    $role = null;
+                    if (isset($user) && !empty($user)) {
+                        $role = $user->role;
+                    } elseif (isset($admin) && !empty($admin)) {
+                        $role = $admin->role;
+                    } elseif (isset($_SESSION['user_role'])) {
+                        $role = $_SESSION['user_role'];
+                    } elseif (function_exists('get_instance')) {
+                        $CI = get_instance();
+                        $role = $CI->session->userdata('user_role');
+                    }
+                    if ($role === 'admin'):
+                ?>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="<?= site_url('admin/users/list') ?>" target="_blank"><i
+                            class="side-menu__icon  bx bx-landscape"></i><span
+                            class="side-menu__label">لیست کاربران</span></a>
+                </li>
+                <?php
+                    endif;
+                ?>
+
             </ul>
         </div>
     </aside>
