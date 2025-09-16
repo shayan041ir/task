@@ -120,7 +120,7 @@ class Users extends MX_Controller  {
 
         // اعتبارسنجی
         $this->form_validation->set_rules('name', 'نام', 'required|min_length[3]');
-        $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email|callback_check_email_unique[' . $id . ']');
+        $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email|is_unique[users.email]');
         $this->form_validation->set_rules('role', 'نقش', 'required|in_list[user,admin]');
         
         if ($this->input->post('password')) {
@@ -168,27 +168,6 @@ class Users extends MX_Controller  {
             redirect('users/users');
         }
     }
-
-
-    // متود سفارشی برای بررسی یکتایی ایمیل در ویرایش
-    public function check_email_unique($email, $exclude_id) {
-        $existing_user = $this->User_model->get_by_email($email);
-        
-        // اگر کاربری با این ایمیل وجود نداشته باشد، OK است
-        if (!$existing_user) {
-            return true;
-        }
-        
-        // اگر کاربر موجود همان کاربری باشد که در حال ویرایش است، OK است
-        if ($existing_user->id == $exclude_id) {
-            return true;
-        }
-        
-        // در غیر این صورت، ایمیل تکراری است
-        $this->form_validation->set_message('check_email_unique', 'این ایمیل قبلاً استفاده شده است.');
-        return false;
-    }
-
 
 
     public function delete($id) {
