@@ -20,8 +20,18 @@ class Users extends MX_Controller  {
     }
 
     public function index() {
-        $this->load->view('users/templates/header');
-        $this->load->view('users/admin/dashboard');
+        $user_id = $this->session->userdata('user_id');
+        $data['admin'] = $this->User_model->get_user($user_id); 
+        $this->load->view('users/templates/header', $data);
+        $this->load->view('users/admin/dashboard', $data);
+        $this->load->view('users/templates/footer');
+    }
+
+    public function list() {
+        $user_id = $this->session->userdata('user_id');
+        $data['admin'] = $this->User_model->get_user($user_id);
+        $this->load->view('users/templates/header', $data);
+        $this->load->view('users/admin/users_list', $data);
         $this->load->view('users/templates/footer');
     }
 

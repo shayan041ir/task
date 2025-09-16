@@ -11,7 +11,8 @@ $route['logout'] = 'users/auth/logout';
 $route['profile'] = 'users/auth/profile';
 
 $route['admin/users'] = 'users/users/index';
-$route['admin/users/list'] = 'users/admin/users/list_json';
-$route['admin/users/create'] = 'users/admin/users/create';
-$route['admin/users/edit/(:num)'] = 'users/admin/users/edit/$1';
-$route['admin/users/delete/(:num)'] = 'users/admin/users/delete/$1';
+$route['admin/users/list'] = 'users/users/list';
+$route['admin/users/list_json'] = 'users/users/list_json';
+$route['admin/users/create'] = 'users/users/create';
+$route['admin/users/edit/(:num)'] = 'users/users/edit/$1';
+$route['admin/users/delete/(:num)'] = 'users/users/delete/$1';
