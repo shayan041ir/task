@@ -42,35 +42,42 @@
                   <h2>خوش برگشتی!</h2>
                   <h4>لطفا برای ادامه وارد شوید</h4>
 
-                  <?= validation_errors('<div class="alert alert-danger">','</div>'); ?>
+                  <?= validation_errors('<div class="alert alert-danger">', '</div>'); ?>
                   <?= form_open('register'); ?>
                   <!-- <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" 
                       value="<?= $this->security->get_csrf_hash(); ?>" /> -->
-                    <div class="form-group">
-                      <input class="form-control" type="text" name="name" placeholder="نام" value="<?= set_value('name'); ?>">
-                    </div>
-                    <div class="form-group">
-                      <input class="form-control" type="email" name="email" placeholder="ایمیل" value="<?= set_value('email'); ?>">
-                    </div>
-                    <div class="form-group">
-                      <input class="form-control" type="password" name="password" placeholder="رمز عبور">
-                    </div>
-                    <div class="form-group">
-                      <input class="form-control" type="password" name="passconf" placeholder="تکرار رمز">
-                    </div>
-                    <div class="form-group">
-                    <select class="form-control" name="role">
-                        <option value="user" <?= set_select('role','user', true) ?>>کاربر معمولی</option>
-                        <option value="admin" <?= set_select('role','admin') ?>>ادمین</option>
-                    </select>
-                </div>
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="name" placeholder="نام"
+                      value="<?= set_value('name'); ?>">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" type="email" name="email" placeholder="ایمیل"
+                      value="<?= set_value('email'); ?>">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" type="date" name="birth_date" placeholder="تاریخ تولد"
+                      value="<?= set_value('birth_date'); ?>">
+                  </div>
 
-                    <button class="btn btn-primary btn-block">ثبت نام</button>
+                  <div class="form-group">
+                    <input class="form-control" type="password" name="password" placeholder="رمز عبور">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" type="password" name="passconf" placeholder="تکرار رمز">
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control" name="role">
+                      <option value="user" <?= set_select('role', 'user', true) ?>>کاربر معمولی</option>
+                      <option value="admin" <?= set_select('role', 'admin') ?>>ادمین</option>
+                    </select>
+                  </div>
+
+                  <button class="btn btn-primary btn-block">ثبت نام</button>
                   <?= form_close(); ?>
 
                 </div>
                 <div class="main-signin-footer mt-3 mg-t-5">
-                  <p class="btn  btn-block"><a href="<?= site_url('login');?>">قبلا حساب باز کردم</a></p>
+                  <p class="btn  btn-block"><a href="<?= site_url('login'); ?>">قبلا حساب باز کردم</a></p>
                 </div>
               </div>
             </div>
@@ -85,4 +92,4 @@
   </div>
   <!-- End Page -->
 
-<?php $this->load->view('/templates/footer.php'); ?>
+  <?php $this->load->view('/templates/footer.php'); ?>

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class User_model extends CI_Model {
     protected $table = 'users';
-    protected $columns = ['id','name','email','role','created_at'];
+    protected $columns = ['id','name','email','birth_date','role','created_at'];
 
     public function insert_user($data) {
         return $this->db->insert($this->table, $data);

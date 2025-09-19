@@ -51,17 +51,19 @@ class Users extends MX_Controller  {
 
         $data = [];
         foreach ($rows as $r) {
+            $actions  = '<a class="btn btn-sm btn-primary" href="'.site_url('users/users/edit/'.$r->id).'">ویرایش</a> ';
+            $actions .= '<a class="btn btn-sm btn-danger" href="'.site_url('users/users/delete/'.$r->id).'" onclick="return confirm(\'حذف شود؟\')">حذف</a>';
 
-            $actions = '<a class="btn btn-sm btn-primary" href="'.site_url('users/users/edit/'.$r->id).'">ویرایش</a> ';
-            $actions .= '<a class="btn btn-sm btn-danger" href="'.site_url('users/users/delete/'.$r->id).'" onclick="return confirm(\'حذف شود؟\')">حذف</a>';            
             $data[] = [
                 $r->id,
                 html_escape($r->name),
                 html_escape($r->email),
+                jalali_format($r->birth_date),
                 html_escape($r->role),
                 $actions
             ];
         }
+
 
         echo json_encode([
             "draw" => $draw,
@@ -74,6 +76,7 @@ class Users extends MX_Controller  {
     public function create() {
         $this->form_validation->set_rules('name', 'نام', 'required|min_length[3]');
         $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('birth_date','تاریخ تولد','required');
         $this->form_validation->set_rules('password', 'رمز عبور', 'required|min_length[6]');
         $this->form_validation->set_rules('role', 'نقش', 'required|in_list[user,admin]');
 
@@ -86,8 +89,10 @@ class Users extends MX_Controller  {
             'name' => $this->input->post('name', true),
             'email' => $this->input->post('email', true),
             'password' => $this->input->post('password'),
-            'role' => $this->input->post('role') ?: 'user'
+            'role' => $this->input->post('role') ?: 'user',
+            'birth_date' => $this->input->post('birth_date') ?: null
         ];
+
         
         try {
             $result = $this->userservice->createUser($data);
@@ -121,7 +126,8 @@ class Users extends MX_Controller  {
 
         // اعتبارسنجی
         $this->form_validation->set_rules('name', 'نام', 'required|min_length[3]');
-        $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('email', 'ایمیل', 'required|valid_email');
+        $this->form_validation->set_rules('birth_date','تاریخ تولد');
         $this->form_validation->set_rules('role', 'نقش', 'required|in_list[user,admin]');
         
         if ($this->input->post('password')) {
@@ -145,8 +151,10 @@ class Users extends MX_Controller  {
         $update = [
             'name' => $this->input->post('name', true),
             'email' => $this->input->post('email', true),
+            'birth_date' => $this->input->post('birth_date') ?: null,
             'role' => $this->input->post('role') ?: 'user'
         ];
+
         
         if ($this->input->post('password')) {
             $update['password'] = $this->input->post('password');
