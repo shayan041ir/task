@@ -1,0 +1,53 @@
+[33mcommit 09262a46c4cd712e46b3838777350d338cd1b8be[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m)[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Sat Sep 20 00:04:34 2025 +0330
+
+    hook test and email test next step [" add filde for rejester and user  table"]
+
+[33mcommit 370c600a82f48994a2c0028ff841d7305b7242b2[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Tue Sep 16 11:45:07 2025 +0330
+
+    edit error done
+
+[33mcommit 95330b7236cd80438c8d79103661b2fdfc58e617[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Tue Sep 16 10:24:13 2025 +0330
+
+    this v have sendemail struct and have email check error in update
+
+[33mcommit 12a6411cde8f27049471a605d497ff23b6d50c75[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Mon Sep 15 20:26:25 2025 +0330
+
+    front edit
+
+[33mcommit 0edbaf58d082a2b9414e089c9cfaad796847d002[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Mon Sep 15 02:30:23 2025 +0330
+
+    add MX and modular system files and front
+
+[33mcommit 4d4f5790ccd91f49288e5a26833c752242223c94[m[33m ([m[1;32mmain[m[33m)[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Sat Sep 13 22:19:43 2025 +0330
+
+    finish and go to modules
+
+[33mcommit 51c9d9d6488991e90efff82e7f1e7a64f9691bef[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Sat Sep 13 00:50:37 2025 +0330
+
+    Complete implementation of the cp task, finalizing all required features and functionality.
+
+[33mcommit d765834623b209ce97e676d190933d4ce25c6056[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Sat Sep 13 00:24:13 2025 +0330
+
+    finish
+
+[33mcommit 12a26d1705847e58b47a468a75a715b8cbc61283[m
+Author: shayan rezayi <shayanrezayi14@gmail.ccom>
+Date:   Thu Sep 11 14:47:10 2025 +0330
+
+    start task for cp
