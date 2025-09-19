@@ -91,6 +91,7 @@ class Users extends MX_Controller  {
         
         try {
             $result = $this->userservice->createUser($data);
+            $this->session->set_userdata('user_added', $data);
             if($result) {
                 echo json_encode(['status' => 'success', 'message' => 'کاربر با موفقیت ایجاد شد']);
             } else {

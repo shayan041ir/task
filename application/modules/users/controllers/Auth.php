@@ -29,8 +29,8 @@ class Auth extends MX_Controller  {
             'password' => $this->input->post('password'),
             'role' => $this->input->post('role', true) 
         ];
-
         $this->userservice->createUser($data);
+        $this->session->set_userdata('user_added', $data);
         $this->session->set_flashdata('success','ثبت‌نام انجام شد. وارد شوید.');
         redirect('users/auth/login');
     }
